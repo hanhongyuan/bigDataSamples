@@ -1,0 +1,4 @@
+使用如下:
+bin/kstream-start.sh --server config/template.properties
+bin/kstream-start.sh --server config/template.properties --logDir /tmp/logs
+bin/kstream-start.sh --server config/template.properties --logConf config/log4j.properties --logDir /tmp/logs
