@@ -6,8 +6,7 @@ import java.time.ZoneOffset;
 
 
 /**
- * Created by ethan
- * 17-11-24
+ *
  */
 public class KsUtilsTest {
     @Test

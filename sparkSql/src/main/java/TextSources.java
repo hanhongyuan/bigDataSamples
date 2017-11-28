@@ -33,8 +33,7 @@ import java.util.List;
  * 更多功能丰富可以参考官网
  * http://spark.apache.org/docs/latest/sql-programming-guide.html#sql
  * <p>
- * Created by ethan
- * 17-6-7
+ *
  */
 public class TextSources implements RelationProvider, SchemaRelationProvider, CreatableRelationProvider {
 
