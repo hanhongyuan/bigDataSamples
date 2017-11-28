@@ -11,7 +11,7 @@ public class KsConfig {
     public static final String COLON = ":";
 
     public static final String DEFAULT_ACTION_ORDER = "mapper,filter,window";
-    public static final String DEFAULT_OUTPUT_KEYS = "all";
+//    public static final String DEFAULT_OUTPUT_KEYS = "all";
     public static final String DEFAULT_DATETIME_LANG = "en";
     public static final String DEFAULT_DATETIME_FORMAT = "uuuu-MM-dd HH:mm:ss.SSS";
     public static final String DEFAULT_DATETIME_ZONEOFFSET_ID = "+08:00";
@@ -23,6 +23,7 @@ public class KsConfig {
     public static final String DIC_TYPE = "dic.type";
     public static final String DIC_FIELDS = "dic.fields";
     public static final String DIC_KAFKA_TOPICS = "dic.kafka.topics";
+    public static final String DIC_ARRAY_VALUES = "dic.array.values";
 
     public static final String ACTION_ORDER = "action.order";
 

@@ -1,10 +1,31 @@
 package com.unimas.kstream.dic;
 
+import com.google.common.collect.ImmutableSet;
+import com.unimas.kstream.KsConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 /**
  * 简单的配置分组存储
- *
+ * can be used for test
  */
 public class SimpleMap implements DicSets {
+
+    private Logger logger = LoggerFactory.getLogger(SimpleMap.class);
+
+    private ConcurrentMap<String, ImmutableSet<String>> cache;
+    private String[] fields;
+    private String[] values;
+
+    public SimpleMap(String[] fields, String[] values) {
+        this.fields = fields;
+        this.values = values;
+        this.cache = new ConcurrentHashMap<>();
+    }
+
     /**
      * Returns <tt>true</tt> if this sets contains the specified element.
      * <p>
@@ -16,7 +37,12 @@ public class SimpleMap implements DicSets {
      */
     @Override
     public boolean contains(String name, String value) {
-        return false;
+        if (cache.isEmpty()) {
+            logger.warn("dic sets is empty......result set always true");
+            return true;
+        } else {
+            return cache.containsKey(name) && cache.get(name).contains(value);
+        }
     }
 
     /**
@@ -50,6 +76,10 @@ public class SimpleMap implements DicSets {
      */
     @Override
     public void run() {
-
+        for (int i = 0; i < this.fields.length; i++) {
+            String key = this.fields[i];
+            String[] values = this.values[i].split(KsConfig.COMMA);
+            this.cache.put(key, ImmutableSet.copyOf(values));
+        }
     }
 }

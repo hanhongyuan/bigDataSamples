@@ -3,6 +3,7 @@ package com.unimas.kstream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.unimas.kstream.dic.DicSets;
+import com.unimas.kstream.dic.SimpleMap;
 import com.unimas.kstream.dic.SkimpyTopicMap;
 import com.unimas.kstream.output.OutPut;
 import com.unimas.kstream.output.OutPutKafka;
@@ -85,20 +86,26 @@ public class KServer extends Thread {
         logger.info("#################### init dic ####################");
         String type = KsUtils.nonNullAndEmpty(properties.getProperty(KsConfig.DIC_TYPE),
                 KsConfig.DIC_TYPE).toLowerCase();
-        if (!"kafka".equals(type))
+        if (!"kafka,array".contains(type)) {
             throw new Exception("dic type " + type + " is not supported...");
+        }
         String[] fields = KsUtils.nonNullAndEmpty(properties.getProperty(KsConfig.DIC_FIELDS),
                 KsConfig.DIC_FIELDS).split(KsConfig.COMMA);
+        if ("kafka".equals(type)) {
+            String[] topics = KsUtils.nonNullAndEmpty(properties.getProperty(KsConfig.DIC_KAFKA_TOPICS),
+                    KsConfig.DIC_KAFKA_TOPICS).split(KsConfig.COMMA);
+            if (fields.length != topics.length)
+                throw new Exception("dic fields length and topic length is not equal...");
 
-        //暂时只有kafka实现
-        String[] topics = KsUtils.nonNullAndEmpty(properties.getProperty(KsConfig.DIC_KAFKA_TOPICS),
-                KsConfig.DIC_KAFKA_TOPICS)
-                .split(KsConfig.COMMA);
-        if (fields.length != topics.length)
-            throw new Exception("dic fields length and topic length is not equal...");
-
-        dicSets = new SkimpyTopicMap(topics, fields,
-                properties.getProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG));
+            dicSets = new SkimpyTopicMap(topics, fields,
+                    properties.getProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG));
+        } else {
+            String[] values = KsUtils.nonNullAndEmpty(properties.getProperty(KsConfig.DIC_ARRAY_VALUES),
+                    KsConfig.DIC_ARRAY_VALUES).split(KsConfig.SEMICOLON);
+            if (fields.length != values.length)
+                throw new Exception("dic fields length and array value length is not equal...");
+            dicSets = new SimpleMap(fields,values);
+        }
         new Thread(dicSets).start();
     }
 
